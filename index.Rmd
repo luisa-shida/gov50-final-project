@@ -1,6 +1,6 @@
 ---
 title: "Gov 50 Final Project"
-author: "Your Name Here"
+author: "Luísa Shida"
 description: "My final project"
 output:
   distill::distill_article:
@@ -11,4 +11,4 @@ output:
 
 ## Project thoughts
 
-I am interested in exploring data related to...
+I am interested in exploring data related to the presence of international students at Harvard overtime, and how that might relate to changes in the university's admission and outreach efforts, affirmative action and diversity policy, the global economic scenario, etc.
