@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["dataprivacy.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/header-attrs-2.25/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1472,7 +1472,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="index_files/header-attrs-2.24/header-attrs.js"></script>
+  <script src="index_files/header-attrs-2.25/header-attrs.js"></script>
   <script src="index_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
   <script src="index_files/popper-2.6.0/popper.min.js"></script>
   <link href="index_files/tippy-6.2.7/tippy.css" rel="stylesheet" />
@@ -1518,8 +1518,34 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <div class="d-article">
 <h2 id="project-thoughts">Project thoughts</h2>
-<p>I am interested in exploring data related to the presence of international students at Harvard overtime, and how that might relate to changes in the university’s admission and outreach efforts, affirmative action and diversity policy, the global economic scenario, etc.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>I am interested in exploring data related to how individuals understand and act upon data privacy and the information they share in social media, applications, and technology as a whole. I would particularly be interested in exploring how education on data privacy relates to how careful individuals are in their data sharing choices, and how they conceive of issues of data exploitation.</p>
+<h2 id="proposal">Proposal</h2>
+<p>Dataset: Pew Research Center: American Trends Panel Wave 49 - Data Privacy &amp; Communications Technology</p>
+<p><strong>Does an individual’s level of education and knowledge on how their data is being used and shared digitally influence their attitude towards data sharing?</strong> In this study, I intend on analyzing whether individuals who are more familiar with the framework of data privacy - particular concepts, laws and regulations, potential dangers and opportunities, etc. - tend to be more or less granular in their relationship with data sharing, that is, whether they are more or less cautious when choosing to share their information with companies, the government, and other institutions. I expect that individuals who have more knowledge on issues of data privacy will be more protective of their data and more careful in how they engage with technology, while individuals with less familiarity with the notions of data privacy will tend to be less attentive and more permissive with their data-sharing choices. I believe this hypothesis might be true since individuals with more knowledge on data privacy will most likely be more aware of the potential dangers that surround sharing personal information with companies and services, therefore looking to prevent these dangers from happening to them. On the other hand, individuals who are not aware of the perils of data sharing might not be afraid of engaging with technology more freely, given that they might not fully comprehend the risks involved with sharing their data. In order to test this hypothesis, I will specifically focus on the variables of this dataset which explore how familiar the respondents of this survey are with important concepts to understanding the framework of data privacy; I am particularly interested in question 4, which asks how much the respondents have read about facial recognition technologies (to which possible responses are “a lot”, “a little” or “nothing at all”), and questions 15-24, which ask the respondents to determine whether a set of data privacy-related statements are conceptually true or not. While these variables indicate how familiar the respondent is to data privacy concepts, other variables ask how they feel regarding the safety of their data, how concerned they are about their personal information getting shared, and how permissive they are to certain applications’ data gathering settings - these questions represent my outcome variables of interest, since they make up a respondent’s attitude towards data sharing. Should respondents who correctly answer questions 15-24, demonstrating their knowledge on data privacy, reveal that they are restrictive and critical in their information sharing through their answers to the latter set of questions, my hypothesis will be proven. Otherwise, if respondents who show command of data privacy topics indicate that they are permissive with the sharing of their data, my hypothesis will be disproven.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
+<span><span class='va'>dataprivacy</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"dataprivacy.csv"</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dataprivacy</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code># A tibble: 6 × 143
+    QKEY DEVICE_TYPE_W49 LANG_W49 FORM_W49 SOCMEDIAUSEa_W49   
+   &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;              
+1 100260 Tablet          English  Form 2   No, do not use this
+2 100588 Mobile phone    English  Form 1   Yes, use this      
+3 100637 Desktop         English  Form 1   Yes, use this      
+4 101224 Mobile phone    English  Form 2   Yes, use this      
+5 101322 Mobile phone    English  Form 1   Yes, use this      
+6 101437 Desktop         English  Form 2   Yes, use this      
+# ℹ 138 more variables: SOCMEDIAUSEb_W49 &lt;chr&gt;,
+#   SOCMEDIAUSEc_W49 &lt;chr&gt;, SOCMEDIAUSEd_W49 &lt;chr&gt;,
+#   SNSUSER_W49 &lt;chr&gt;, ELECTFTGSNSINT_W49 &lt;chr&gt;,
+#   TALKDISASNSINT_W49 &lt;chr&gt;, TALKCMNSNSINT_W49 &lt;chr&gt;,
+#   SECUR1_W49 &lt;chr&gt;, PRIVACYNEWS1_W49 &lt;chr&gt;, HOMEASSIST1_W49 &lt;chr&gt;,
+#   HOMEASSIST2_W49 &lt;chr&gt;, HOMEASSIST3_W49 &lt;chr&gt;,
+#   HOMEASSIST4_W49 &lt;chr&gt;, HOMEASSIST5a_W49 &lt;chr&gt;, …</code></pre>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
