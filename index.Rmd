@@ -23,6 +23,12 @@ https://ropercenter.cornell.edu/ipoll/study/31116657/questions?text=college#c5b3
 ## Data Visualization
 
 ```{r}
+library(tidyverse)
+dataprivacy <- read_csv("dataprivacy.csv")
+```
+
+
+```{r}
 dataprivacy_clean <- dataprivacy |> select(PRIVACYNEWS1_W49, TRACKCO1a_W49, TRACKCO1b_W49, CONCERNCO_W49)
 dataprivacy_clean <- dataprivacy_clean |> rename(privacynews = PRIVACYNEWS1_W49, onlinetracking_opinion = TRACKCO1a_W49, offlinetracking_opinion = TRACKCO1b_W49, concern_level = CONCERNCO_W49) 
 dataprivacy_clean |> drop_na()
