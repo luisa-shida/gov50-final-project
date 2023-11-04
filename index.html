@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["dataprivacy.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/header-attrs-2.25/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["dataprivacy.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/header-attrs-2.25/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1520,7 +1520,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <h2 id="project-thoughts">Project thoughts</h2>
 <p>I am interested in exploring data related to how individuals understand and act upon data privacy and the information they share in social media, applications, and technology as a whole. I would particularly be interested in exploring how education on data privacy relates to how careful individuals are in their data sharing choices, and how they conceive of issues of data exploitation.</p>
 <h2 id="proposal">Proposal</h2>
-<p>Dataset: Pew Research Center: American Trends Panel Wave 49 - Data Privacy &amp; Communications Technology</p>
+<p>Dataset: Pew Research Center: American Trends Panel Wave 49 - Data Privacy &amp; Communications Technology
+<a href="https://ropercenter.cornell.edu/ipoll/study/31116657/questions?text=college#c5b33662-fd89-426c-8923-ff1d530f920f" class="uri">https://ropercenter.cornell.edu/ipoll/study/31116657/questions?text=college#c5b33662-fd89-426c-8923-ff1d530f920f</a></p>
 <p><strong>Does an individual’s level of education and knowledge on how their data is being used and shared digitally influence their attitude towards data sharing?</strong> In this study, I intend on analyzing whether individuals who are more familiar with the framework of data privacy - particular concepts, laws and regulations, potential dangers and opportunities, etc. - tend to be more or less granular in their relationship with data sharing, that is, whether they are more or less cautious when choosing to share their information with companies, the government, and other institutions. I expect that individuals who have more knowledge on issues of data privacy will be more protective of their data and more careful in how they engage with technology, while individuals with less familiarity with the notions of data privacy will tend to be less attentive and more permissive with their data-sharing choices. I believe this hypothesis might be true since individuals with more knowledge on data privacy will most likely be more aware of the potential dangers that surround sharing personal information with companies and services, therefore looking to prevent these dangers from happening to them. On the other hand, individuals who are not aware of the perils of data sharing might not be afraid of engaging with technology more freely, given that they might not fully comprehend the risks involved with sharing their data. In order to test this hypothesis, I will specifically focus on the variables of this dataset which explore how familiar the respondents of this survey are with important concepts to understanding the framework of data privacy; I am particularly interested in question 4, which asks how much the respondents have read about facial recognition technologies (to which possible responses are “a lot”, “a little” or “nothing at all”), and questions 15-24, which ask the respondents to determine whether a set of data privacy-related statements are conceptually true or not. While these variables indicate how familiar the respondent is to data privacy concepts, other variables ask how they feel regarding the safety of their data, how concerned they are about their personal information getting shared, and how permissive they are to certain applications’ data gathering settings - these questions represent my outcome variables of interest, since they make up a respondent’s attitude towards data sharing. Should respondents who correctly answer questions 15-24, demonstrating their knowledge on data privacy, reveal that they are restrictive and critical in their information sharing through their answers to the latter set of questions, my hypothesis will be proven. Otherwise, if respondents who show command of data privacy topics indicate that they are permissive with the sharing of their data, my hypothesis will be disproven.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -1545,7 +1546,47 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 #   HOMEASSIST2_W49 &lt;chr&gt;, HOMEASSIST3_W49 &lt;chr&gt;,
 #   HOMEASSIST4_W49 &lt;chr&gt;, HOMEASSIST5a_W49 &lt;chr&gt;, …</code></pre>
 </div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+##Data Visualization
+1) Clearing the data
+- Since this dataset has 143 columns, I will first filter the data down to the variables of interest and rename them for easier analysis.
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dataprivacy_clean</span> <span class='op'>&lt;-</span> <span class='va'>dataprivacy</span> <span class='op'>|&gt;</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>PRIVACYNEWS1_W49</span>, <span class='va'>TRACKCO1a_W49</span>, <span class='va'>TRACKCO1b_W49</span>, <span class='va'>CONCERNCO_W49</span><span class='op'>)</span></span>
+<span><span class='va'>dataprivacy_clean</span> <span class='op'>&lt;-</span> <span class='va'>dataprivacy_clean</span> <span class='op'>|&gt;</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>privacynews <span class='op'>=</span> <span class='va'>PRIVACYNEWS1_W49</span>, onlinetracking_opinion <span class='op'>=</span> <span class='va'>TRACKCO1a_W49</span>, offlinetracking_opinion <span class='op'>=</span> <span class='va'>TRACKCO1b_W49</span>, concern_level <span class='op'>=</span> <span class='va'>CONCERNCO_W49</span><span class='op'>)</span> </span>
+<span><span class='va'>dataprivacy_clean</span> <span class='op'>|&gt;</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/drop_na.html'>drop_na</a></span><span class='op'>(</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code># A tibble: 2,140 × 4
+   privacynews        onlinetracking_opinion  offlinetracking_opinion
+   &lt;chr&gt;              &lt;chr&gt;                   &lt;chr&gt;                  
+ 1 Not too closely    Some of it              None of it             
+ 2 Not too closely    Some of it              Very little of it      
+ 3 Not at all closely All or almost all of it All or almost all of it
+ 4 Somewhat closely   Most of it              Very little of it      
+ 5 Very closely       All or almost all of it All or almost all of it
+ 6 Not too closely    All or almost all of it Some of it             
+ 7 Not too closely    Some of it              Some of it             
+ 8 Not at all closely Some of it              All or almost all of it
+ 9 Very closely       All or almost all of it Very little of it      
+10 Not too closely    Very little of it       None of it             
+# ℹ 2,130 more rows
+# ℹ 1 more variable: concern_level &lt;chr&gt;</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dataprivacy_clean</span> <span class='op'>&lt;-</span> <span class='va'>dataprivacy_clean</span> <span class='op'>|&gt;</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/drop_na.html'>drop_na</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>|&gt;</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>privacy_information <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span><span class='op'>(</span><span class='va'>privacynews</span> <span class='op'>==</span> <span class='st'>"Not at all closely"</span> <span class='op'>~</span> <span class='fl'>0</span>,</span>
+<span>                                                            <span class='va'>privacynews</span> <span class='op'>==</span> <span class='st'>"Not too closely"</span> <span class='op'>~</span> <span class='fl'>1</span>,</span>
+<span>                                                            <span class='va'>privacynews</span> <span class='op'>==</span> <span class='st'>"Somewhat closely"</span> <span class='op'>~</span> <span class='fl'>2</span>,</span>
+<span>                                                            <span class='va'>privacynews</span> <span class='op'>==</span> <span class='st'>"Very closely"</span> <span class='op'>~</span> <span class='fl'>3</span><span class='op'>)</span>, </span>
+<span>                                         concern_level_num <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span><span class='op'>(</span><span class='va'>concern_level</span> <span class='op'>==</span> <span class='st'>"Not at all concerned"</span> <span class='op'>~</span> <span class='fl'>0</span>,</span>
+<span>                                         <span class='va'>concern_level</span> <span class='op'>==</span> <span class='st'>"Not too concerned"</span> <span class='op'>~</span> <span class='fl'>1</span>,</span>
+<span>                                         <span class='va'>concern_level</span> <span class='op'>==</span> <span class='st'>"Somewhat concerned"</span> <span class='op'>~</span> <span class='fl'>2</span>,</span>
+<span>                                         <span class='va'>concern_level</span> <span class='op'>==</span> <span class='st'>"Very concerned"</span> <span class='op'>~</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>plot1</span> <span class='op'>&lt;-</span> <span class='va'>dataprivacy_clean</span> <span class='op'>|&gt;</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>concern_level_num</span>, fill <span class='op'>=</span> <span class='va'>privacynews</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_bar</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Level of Concern with Data Privacy"</span>, y <span class='op'>=</span> <span class='st'>"Number of respondents"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html'>scale_fill_discrete</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>"How closely respondent follows data news"</span><span class='op'>)</span></span>
+<span><span class='va'>plot1</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
+</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
