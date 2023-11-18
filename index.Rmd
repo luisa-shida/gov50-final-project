@@ -25,10 +25,6 @@ https://ropercenter.cornell.edu/ipoll/study/31116657/questions?text=college#c5b3
 ```{r}
 library(tidyverse)
 dataprivacy <- read_csv("dataprivacy.csv")
-```
-
-
-```{r}
 dataprivacy_clean <- dataprivacy |> select(PRIVACYNEWS1_W49, TRACKCO1a_W49, TRACKCO1b_W49, CONCERNCO_W49)
 dataprivacy_clean <- dataprivacy_clean |> rename(privacynews = PRIVACYNEWS1_W49, onlinetracking_opinion = TRACKCO1a_W49, offlinetracking_opinion = TRACKCO1b_W49, concern_level = CONCERNCO_W49) 
 dataprivacy_clean |> drop_na()
@@ -38,21 +34,34 @@ dataprivacy_clean <- dataprivacy_clean |> drop_na() |> mutate(privacy_informatio
                                                             privacynews == "Not too closely" ~ 1,
                                                             privacynews == "Somewhat closely" ~ 2,
                                                             privacynews == "Very closely" ~ 3), 
-                                         concern_level_num = case_when(concern_level == "Not at all concerned" ~ 0,
-                                         concern_level == "Not too concerned" ~ 1,
-                                         concern_level == "Somewhat concerned" ~ 2,
-                                         concern_level == "Very concerned" ~ 3))
+                                         concern_level_num = case_when(concern_level == "Not at all concerned" ~ 1,
+                                         concern_level == "Not too concerned" ~ 2,
+                                         concern_level == "Somewhat concerned" ~ 3,
+                                         concern_level == "Very concerned" ~ 4))
 plot1 <- dataprivacy_clean |> ggplot(mapping = aes(x = concern_level_num, fill = privacynews)) + geom_bar(position = "dodge") + labs(x = "Level of Concern with Data Privacy", y = "Number of respondents") + scale_fill_discrete(name = "How closely respondent follows data news")
 plot1
 
 ```
 
+Now, we're going to treat this dataset as an observational study and focus on whether there is a relationship between individuals who have had suffered from others taking over their social media without permission (treatment group) in the last 12 months and those who haven't. Ultimately, this will be interesting to assess whether people who have suffered from cybersecurity breaches are more concerned with their safety and privacy online.
+
+Variables of interest:
+DB1B_W49: In the last 12 months, have you had someone...take over your social media or email account without your permission?
 
 
+```{r}
+cyber_breach <- dataprivacy |> select(DB1b_W49, CONCERNCO_W49) |> rename(socialmedia_crime = DB1b_W49, concern_level = CONCERNCO_W49) |> drop_na() |> filter(socialmedia_crime == "No"| socialmedia_crime == "Yes") |> mutate(socialmedia_hack = if_else(socialmedia_crime == "Yes", "Treated", "Control"),     concern_level_num = case_when(concern_level == "Not at all concerned" ~ 1,
+                                         concern_level == "Not too concerned" ~ 2,
+                                         concern_level == "Somewhat concerned" ~ 3,
+                                         concern_level == "Very concerned" ~ 4))
 
+cyber_breach_ate <- cyber_breach |> group_by(socialmedia_hack) |> drop_na() |> summarize(mean_concern = mean(concern_level_num)) |> pivot_wider(names_from = socialmedia_hack, values_from = mean_concern) |> mutate(ate = Treated - Control)
 
+knitr::kable(cyber_breach_ate, col.names = c("Control group concern mean", "Treated group concern mean", "ATE"))
 
-
+cyber_breach_plot <- cyber_breach |> group_by(socialmedia_hack) |> drop_na() |> summarize(mean_concern = mean(concern_level_num)) |> ggplot(mapping = aes(x = socialmedia_hack, y = mean_concern)) + geom_col(mapping = aes(fill = socialmedia_hack)) + labs(x = "Treatment", y ="Mean Concern Level")
+cyber_breach_plot
+```
 
 
 
