@@ -65,8 +65,7 @@ cyber_breach_plot
 
 
 
-
-
+As we can see in the plot above, the mean privacy concern level of the treated group (that is, individuals who have suffered social media take overs without consent) is higher than that of the control group (those who have not suffered social media hacking). In order to better analyze this discrepancy, we can take a look at the average treatment effect (ATE) between these means - which is the positive value of 0.20. Although we cannot interpret this causally since many confounders have not been yet addressed, the ATE does confirm that the treated group of this study has higher data privacy and cybersecurity concerns than the control group.
 
 
 
