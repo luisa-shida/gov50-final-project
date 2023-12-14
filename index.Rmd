@@ -1,77 +1,283 @@
 ---
-title: "Gov 50 Final Project"
+title: "Is ignorance bliss? Knowledge of privacy issues vs. one's level of concern "
 author: "Luísa Shida"
-description: "My final project"
+description: "Can following the news on data privacy issues affect an individual's concern about their own privacy? This report seeks to find what is behind someone's concern about data privacy."
 output:
   distill::distill_article:
     self_contained: false
+    toc: true
+    toc_depth: 3
+    toc_float: false
 ---
 
+```{r, layout="l-screen", fig.cap = "Photo by Towfiqu Barbhuiya", echo = FALSE}
+knitr::include_graphics("foto.png")
+library(viridis)
+library(viridisLite)
+library(wesanderson)
+```
+# Introduction
+**Does an individual's level of education and knowledge on how their data is being used and shared digitally influence their attitude towards data sharing?** 
+In this study, I intend on analyzing whether individuals who are more familiar with the framework of data privacy tend to be more or less granular in their relationship with data sharing, that is, whether they are more or less cautious when choosing to share their information with companies, the government, and other institutions. I expect that individuals who have more knowledge on issues of data privacy will be more protective of their data and more careful in how they engage with technology, while individuals with less familiarity with the notions of data privacy will tend to be less attentive and more permissive with their data-sharing choices. I believe this hypothesis might be true since individuals with more knowledge on data privacy will most likely be more aware of the potential dangers that surround sharing personal information with companies and services, therefore looking to prevent these dangers from happening to them. On the other hand, individuals who are not aware of the perils of data sharing might not be afraid of engaging with technology more freely, given that they might not fully comprehend the risks involved with sharing their data. 
 
+# Data
 
-## Project thoughts
+## Dataset overview
+The data used in this study is taken from the June 2019 survey "American Trends Panel Wave 49", carried out by the company Ipsos and sponsored by the Pew Research Center for the People & the Press. Respondents were US adults randomly selected from phone number random-digit-dial surveys, answering a series of multiple-choice questions on issues related to technology, social media, surveillance and data privacy. The survey had a total of 4272 participants; this is an overview of the dataset: 
 
-I am interested in exploring data related to how individuals understand and act upon data privacy and the information they share in social media, applications, and technology as a whole. I would particularly be interested in exploring how education on data privacy relates to how careful individuals are in their data sharing choices, and how they conceive of issues of data exploitation.
-
-## Proposal
-
-Dataset: Pew Research Center: American Trends Panel Wave 49 - Data Privacy & Communications Technology
-https://ropercenter.cornell.edu/ipoll/study/31116657/questions?text=college#c5b33662-fd89-426c-8923-ff1d530f920f
-
-**Does an individual's level of education and knowledge on how their data is being used and shared digitally influence their attitude towards data sharing?** In this study, I intend on analyzing whether individuals who are more familiar with the framework of data privacy - particular concepts, laws and regulations, potential dangers and opportunities, etc. - tend to be more or less granular in their relationship with data sharing, that is, whether they are more or less cautious when choosing to share their information with companies, the government, and other institutions. I expect that individuals who have more knowledge on issues of data privacy will be more protective of their data and more careful in how they engage with technology, while individuals with less familiarity with the notions of data privacy will tend to be less attentive and more permissive with their data-sharing choices. I believe this hypothesis might be true since individuals with more knowledge on data privacy will most likely be more aware of the potential dangers that surround sharing personal information with companies and services, therefore looking to prevent these dangers from happening to them. On the other hand, individuals who are not aware of the perils of data sharing might not be afraid of engaging with technology more freely, given that they might not fully comprehend the risks involved with sharing their data. In order to test this hypothesis, I will specifically focus on the variables of this dataset which explore how familiar the respondents of this survey are with important concepts to understanding the framework of data privacy; I am particularly interested in question 4, which asks how much the respondents have read about facial recognition technologies (to which possible responses are "a lot", "a little" or "nothing at all"), and questions 15-24, which ask the respondents to determine whether a set of data privacy-related statements are conceptually true or not. While these variables indicate how familiar the respondent is to data privacy concepts, other variables ask how they feel regarding the safety of their data, how concerned they are about their personal information getting shared, and how permissive they are to certain applications' data gathering settings - these questions represent my outcome variables of interest, since they make up a respondent's attitude towards data sharing. Should respondents who correctly answer questions 15-24, demonstrating their knowledge on data privacy, reveal that they are restrictive and critical in their information sharing through their answers to the latter set of questions, my hypothesis will be proven. Otherwise, if respondents who show command of data privacy topics indicate that they are permissive with the sharing of their data, my hypothesis will be disproven.
-
-## Data Visualization 
-
-```{r}
+```{r, overview}
 library(tidyverse)
+library(dplyr)
 dataprivacy <- read_csv("dataprivacy.csv")
-dataprivacy_clean <- dataprivacy |> select(PRIVACYNEWS1_W49, TRACKCO1a_W49, TRACKCO1b_W49, CONCERNCO_W49)
-dataprivacy_clean <- dataprivacy_clean |> rename(privacynews = PRIVACYNEWS1_W49, onlinetracking_opinion = TRACKCO1a_W49, offlinetracking_opinion = TRACKCO1b_W49, concern_level = CONCERNCO_W49) 
-dataprivacy_clean |> drop_na()
+rmarkdown::paged_table(dataprivacy)
 ```
+## Study Overview
+This observational study is cross-sectional, analyzing the relationships between different variables in accordance with the survey's data. We are particularly interested in studying the potential relationships between our dependent variable, whether the respondent is concerned with their data privacy or not, and their knowledge of data privacy issues. In regards to quantifying one's "knowledge of data privacy issues", this study will consider whether or not respondents follow privacy issues in the news (`privacynews`). In order to address confounders and study other potential relationships, we will also include analyses with the independent variables of age group, educational attainment, and whether or not the respondent has had one of their social media accounts hacked in the last 12 months. 
+
+For the purposes of this study, the ordinal variables of interest were renamed, and to facilitate the calculation of regressions, I created corresponding numeric variables to some of the ordinal variables, attributing numerical values for their possible responses, as follows:
+
+Original Variable Name | Renamed Variable | Corresponding Numeric Variable | Description | Possible responses
+-------------------------------|------------------|-------------|-------------|---------------------------------
+`CONCERNCO_W49`| `concern_level`| `concern_level_num`|How concerned respondent is with how companies use their data | 4 = Very concerned, 3 = somewhat concerned, 2 = not too concerned, 0 = not at all concerned, Refused (removed from dataset)
+`F_AGECAT`|`age_group`| - | Respondent's age group | 18-29yrs, 30-49yrs, 50-64yrs, 65+yrs
+`F_EDUCCAT`|`education`|-| Respondent's educational attainment | 3 = College graduate+ (college degree and above), 2 = some college (unfinished college degree), 1 = high school graduate or less, 0 = don't know/refused
+`PRIVACYNEWS1_W49`|`privacynews`| `privacynews_num`|How closely respondent follows news about privacy issues|3 = Very closely, 2 = somewhat closely, 1 = not too closely, 0 = not at all closely
+`DB1b_W49`|`hacking`|-|Whether or not respondent has had a social media or email account taken over without permission| 1 = Yes, 0 = no, 0 = offline (doesn't have internet access)
+
+Given that analyzing the relationship between one's level of concern about data privacy and other variables is the point of this study, I have also filtered out survey respondents who did not answer the question about their concern level or how closely they followed privacy news. This results in a total number of 2132 respondents in the tidied data frame, out of the original 4272.
+
+
+### Tidying up the data
+```{r, tidying-data}
+dataprivacy_tidy <- dataprivacy |>
+  dplyr::select(F_AGECAT, F_EDUCCAT, PRIVACYNEWS1_W49, CONCERNCO_W49, DB1b_W49) |>
+    rename(age_group = F_AGECAT, 
+         education = F_EDUCCAT, 
+         privacynews = PRIVACYNEWS1_W49, 
+         concern_level = CONCERNCO_W49,
+         hacking = DB1b_W49) |> 
+  drop_na(concern_level) |>
+  filter(!concern_level == "Refused", !privacynews == "Refused") |>
+  mutate(privacynews_num= case_when(privacynews == "Not at all closely" ~ 0,
+                                    privacynews == "Not too closely" ~ 1,
+                                    privacynews == "Somewhat closely" ~ 2,
+                                    privacynews == "Very closely" ~ 3), 
+         concern_level_num = case_when(concern_level == "Not at all concerned" ~ 0, 
+                                       concern_level == "Not too concerned" ~ 1,
+                                       concern_level == "Somewhat concerned" ~ 2,
+                                       concern_level == "Very concerned" ~ 3),
+         hacking_num = if_else(hacking == "Yes", 1, 0))
+
+rmarkdown::paged_table(dataprivacy_tidy)
+```
+
+### Visualizing the dependent variable
+The dependent variable for this study is one's level of concern regarding their data privacy (`concern_level`). This variable corresponds to the survey question:
+
+> How concerned are you, if at all, about how companies are using the data they collect about you?  
+
+The following plot and table summarize the number of respondents per level of concern with data privacy in accordance to their responses:
+
+```{r, dependent-variable-plot}
+plot_concernlevel <- dataprivacy_tidy |>
+  ggplot(mapping = aes(
+    x = concern_level,
+    fill = concern_level)) + 
+  geom_bar() +
+  labs(title = "Number of Respondents per Level of Concern about Data Privacy", 
+       x = "Level of Concern", 
+       y = "Number of Respondents") + 
+  theme(legend.position = "none") +
+  scale_fill_manual(values = wes_palette("Zissou1", 4, type = "continuous"))
+
+plot_concernlevel
+
+count_concern_level <- dataprivacy_tidy |> group_by(concern_level) |> count(concern_level)
+knitr::kable(count_concern_level, col.names = c("Level of Concern", "Number of Respondents"))
+  
+```
+As we can see from the plot and table above, most of the participants were on the higher end of the concern scale - "somewhat concerned" (919 respondents) or "very concerned" (786). 
+
+# Results
+
+### Visualizing relationships of interest
+Before we run the regressions between the variables, we will plot the relationships between the dependent variable (level of concern) and each independent variable of interest in order to visualize potential associations, in spite of not yet being able to draw any causal relationships between them since we cannot address confounders or potential biases.
+
+**1. Level of concern x Knowledge of privacy issues (how closely they follow data privacy news)**
+```{r, privacy-news-concern-plot, out.width = "100%"}
+p_concernxprivacynews <- dataprivacy_tidy |> 
+  ggplot(mapping = aes(
+    x = concern_level,
+    fill = privacynews)) + 
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = wes_palette("GrandBudapest2", 4, type = "continuous")) +
+  labs(title = "Level of Concern x Data Privacy News Following",
+       x = "Level of Concern",
+       y = "Number of Respondents",
+       fill = "How closely respondent
+follows privacy news") + 
+   theme(axis.text.x = element_text(size = 7))
+p_concernxprivacynews
+```
+The plot above shows us that most respondents follow privacy news "somewhat closely", especially when their level of concern is higher ("somewhat concern" or "very concerned"); the highest number of individuals who follow news "very closely" is within the "very concerned" group. The predominant trend in news following for the groups with lesser concern is "not too closely." Therefore, it seems that the respondents with higher concern levels tend to follow news more closely.
+
+**2. Level of Concern x Age Group**
+```{r, age-concern-plot}
+p_concernxage <- dataprivacy_tidy |> 
+  group_by(age_group) |>
+  ggplot(mapping = aes(
+    x = age_group,
+    fill = concern_level)) + 
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = wes_palette("GrandBudapest1", 4, type = "continuous")) +
+  labs(title =  "Age Group x Level of Concern",
+       x = "Age Group",
+       y = "Number of Respondents",
+       fill = "Level of Concern")
+
+age_concern_prop <- dataprivacy_tidy |> 
+  group_by(age_group) |> 
+  summarize(mean_concern = mean(concern_level_num))
+
+p_concernxage
+knitr::kable(age_concern_prop, col.names = c("Age Group", "Mean Concern Level"))
+
+```
+From the plot above, we can see that all age groups had a majority of its respondents fall within the "somewhat concerned" category, followed subsequently by "very concerned", "not too concerned", and "not at all concerned." The table above indicates that the 50-64 age group has the highest average level of concern, followed by the 65+ group, then the 30-49 group, and finally the 18-29 group, with the lowest mean concern level of 1.9 (the younger group, although having a majority of respondents stating that they are "somewhat concerned", falls under an average of the "Not too concerned" category).
+
+**3. Level of Concern x Educational Attainment**
 ```{r}
-dataprivacy_clean <- dataprivacy_clean |> drop_na() |> mutate(privacy_information = case_when(privacynews == "Not at all closely" ~ 0,
-                                                            privacynews == "Not too closely" ~ 1,
-                                                            privacynews == "Somewhat closely" ~ 2,
-                                                            privacynews == "Very closely" ~ 3), 
-                                         concern_level_num = case_when(concern_level == "Not at all concerned" ~ 1,
-                                         concern_level == "Not too concerned" ~ 2,
-                                         concern_level == "Somewhat concerned" ~ 3,
-                                         concern_level == "Very concerned" ~ 4))
-plot1 <- dataprivacy_clean |> ggplot(mapping = aes(x = concern_level_num, fill = privacynews)) + geom_bar(position = "dodge") + labs(x = "Level of Concern with Data Privacy", y = "Number of respondents") + scale_fill_discrete(name = "How closely respondent follows data news")
-plot1
+p_concernxeducation <- dataprivacy_tidy |> 
+  group_by(education) |>
+  filter(!education == "Don't know/Refused") |>
+  mutate(education = case_when(education == "H.S. graduate or less" ~ "1. High school graduate or less",
+                               education == "Some College" ~ "2. Partial college education",
+                               education == "College graduate+" ~ "3. Completed college degree and above")) |>
+  ggplot(mapping = aes(
+    x = education,
+    fill = concern_level)) + 
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = wes_palette("Rushmore1", 4, type = "continuous")) +
+  labs(title =  "Educational Attainment x Level of Concern",
+       x = "Educational Attainment",
+       y = "Number of Respondents",
+       fill = "Level of Concern") +
+  theme(axis.text.x = element_text(size = 7))
+
+education_concern_prop <- dataprivacy_tidy |> 
+  group_by(education) |> 
+  filter(!education == "Don't know/Refused") |>
+  summarize(mean_concern = mean(concern_level_num))
+
+p_concernxeducation
+knitr::kable(education_concern_prop, col.names = c("Educational Attainment", "Mean Concern Level"))
+```
+From the plot and table above, we can see that individuals who did not complete college but partially attended had the highest average concern level, followed by college graduates and above, and then high school graduates or less. In all three groups, the majority's sentiment was "somewhat concerned", followed by "very concerned", "not too concerned", and then "not at all concerned".
+
+**4. Level of Concern x Victim of Hacking**
+For this specific variable, we're going to treat this study almost as if it were a difference-in-means and focus on whether there is a relationship between individuals who have had suffered from others taking over their social media without permission (which we will consider the "treatment" group) in the last 12 months and those who haven't ("control" group). Ultimately, this will be interesting to assess whether people who have suffered from cybersecurity breaches are more concerned with their safety and privacy online. A sidenote is that this is not a completely accurate difference-in-means, given that we have very little information on what kind of hacking incident the respondents might have suffered - however, it can still make for an interesting analysis in our study.
+
+```{r, hacking}
+cyber_breach <- dataprivacy_tidy |> 
+  select(hacking_num, concern_level_num) |> 
+  group_by(hacking_num) |>
+  mutate(treatment = if_else(hacking_num == "1", "Treated", "Control"))
+
+cyber_breach_ate <- cyber_breach |> 
+  group_by(treatment) |> 
+  drop_na() |> 
+  summarize(mean_concern = mean(concern_level_num)) |>
+  pivot_wider(names_from = treatment, values_from = mean_concern) |>
+  mutate(ATE = Treated - Control)
+
+knitr::kable(cyber_breach_ate, digits = 2, col.names = c("Control Group Mean Level of Concern", "Treated Group Mean Level of Concern", "ATE"))
+
 
 ```
+As we can see in the plot and table above, the mean privacy concern level of the treated group (that is, individuals who have suffered social media take overs without consent) is higher than that of the control group (those who have not suffered social media hacking). In order to better analyze this discrepancy, we can take a look at the average treatment effect (ATE) between these means - which is the positive value of 0.20. Although we cannot interpret this causally since many confounders have not been yet addressed, the ATE does confirm that the treated group of this study has higher data privacy and cybersecurity concerns than the control group.
 
-Now, we're going to treat this dataset as an observational study and focus on whether there is a relationship between individuals who have had suffered from others taking over their social media without permission (treatment group) in the last 12 months and those who haven't. Ultimately, this will be interesting to assess whether people who have suffered from cybersecurity breaches are more concerned with their safety and privacy online.
+## Regressions
+### 1. Main Variable Regression
+The main analysis of interest is the potential relationship between the level of concern over data privacy (`concern_level_num`) and knowledge on privacy issues, quantified by how closely one follows news about data privacy (`privacynews`). Therefore, the regression below is ran only using these two variables.
 
-Variables of interest:
-DB1B_W49: In the last 12 months, have you had someone...take over your social media or email account without your permission?
+```{r, main regression}
+main_fit <- lm(concern_level_num ~ privacynews, data = dataprivacy_tidy)
+
+modelsummary::modelsummary(list(Regression = main_fit), 
+                           statistic = c("s.e. = {std.error}", "p = {p.value}"), 
+                           gof_map = c("nobs", "r.squared", "adj.r.squared"), 
+                           fmt = 2, 
+                           coef_rename = c(privacynews_num = "Privacy News Following"))
+```
+
+Given that `privacynews` is a categorical variable, the intercept in the regression above tells us that the average baseline concern level for respondents who do not follow privacy news at all (the ommitted group) is 1.78. The other coefficients tell us the difference in concern level between each other group and the group of individuals who do not follow the news. In other words, the regression above tells us that: 
+
+* The group of individuals who follows news "not too closely" is on average 0.11 points more concerned with their data privacy then those who don't follow privacy news at all;   
+* The group who follows news "somewhat closely" is on average 0.48 points more concerned about their data privacy than those who don't follow privacy news at all.   
+* The group who follows news "very closely" is on average 0.82 points more concerned about their data privacy then those who don't follow privacy news at all.  
+It is important to remember that the concern level scale is based on values from 0-3, ranging from not concerned at all to very concerned.
+
+Working under an alpha of 0.1, not all of these numbers would therefore all be statistically significant - the p-value for the "not too closely" group is 0.11. Still, the regression results are consistent with my initial hypothesis, since the group with the highest average concern level is that which follows privacy news very closely. Nonetheless, given that many confounders have not been addressed, we cannot interpret this relationship as necessarily causal.
+
+### 2. Adressing Confounders - Multivariable Regression
+In order to reach a more accurate representation of the relationship between level of concern about data privacy and knowledge on privacy issues based on news following, we can try to control for some confounders. Thus, we will run a multivariate regression model including the independent variables age group, educational attainment level and whether or not individuals had one of their social media or email accounts hacked in the past 12 months.
+
+The main reasoning behind considering age group as a confounder is that we must take the age digital divide into account in our study. As a study by the European Money and Finance Forum states, older generations are less likely to use technology and digital services than younger generations. Since there is a discrepancy in how different age groups use of technology and thus what their relationship with data is like, we should investigate whether and how that can affect how they perceive data privacy. Educational attainment is also an interesting variable to study as a possible confounder - would a higher educational degree in any way be associated with more concern over data privacy? A A 2016 survey by the EDUCAUSE Center for Analysis and Research (ECAR) revealed that one-third of undergraduate students were concerned that technology might lead to privacy invasions, for instance - will this finding hold in our study? Finally, the last potential confounder we will include in the regression is whether the respondent has suffered a hacking attack in the past 12 months. This is interesting since a possible hypothesis is that individuals who have had negative experiences with data privacy breaches would be more concerned about their data privacy after the event, as well as more knowledgeable on how breaches happen. 
 
 
 ```{r}
-cyber_breach <- dataprivacy |> select(DB1b_W49, CONCERNCO_W49) |> rename(socialmedia_crime = DB1b_W49, concern_level = CONCERNCO_W49) |> drop_na() |> filter(socialmedia_crime == "No"| socialmedia_crime == "Yes") |> mutate(socialmedia_hack = if_else(socialmedia_crime == "Yes", "Treated", "Control"),     concern_level_num = case_when(concern_level == "Not at all concerned" ~ 1,
-                                         concern_level == "Not too concerned" ~ 2,
-                                         concern_level == "Somewhat concerned" ~ 3,
-                                         concern_level == "Very concerned" ~ 4))
+multivariate_dataprivacy <- dataprivacy_tidy |> 
+  filter(!education == "Don't know/Refused",
+         !hacking == "Refused",
+         !hacking == "Offline: does not have internet")
 
-cyber_breach_ate <- cyber_breach |> group_by(socialmedia_hack) |> drop_na() |> summarize(mean_concern = mean(concern_level_num)) |> pivot_wider(names_from = socialmedia_hack, values_from = mean_concern) |> mutate(ate = Treated - Control)
+multi_fit <- lm(concern_level_num ~ privacynews + age_group + education + hacking, 
+                data = multivariate_dataprivacy)
 
-knitr::kable(cyber_breach_ate, col.names = c("Control group concern mean", "Treated group concern mean", "ATE"))
-
-cyber_breach_plot <- cyber_breach |> group_by(socialmedia_hack) |> drop_na() |> summarize(mean_concern = mean(concern_level_num)) |> ggplot(mapping = aes(x = socialmedia_hack, y = mean_concern)) + geom_col(mapping = aes(fill = socialmedia_hack)) + labs(x = "Treatment", y ="Mean Concern Level")
-cyber_breach_plot
+modelsummary::modelsummary(list
+                           (Regression = multi_fit),
+                           statistic = c("s.e. = {std.error}", "p = {p.value}"), 
+                           gof_map = c("nobs", "r.squared", "adj.r.squared"), 
+                           fmt = 2)
 ```
 
+From the regression above, we can gather plenty of information about how these variables relate to one's level of concern. However, when adopting an alpha of 0.1, the most interesting observations are:  
+
+* For someone who does not follow privacy news at all, has received no education and has not yet been born (age group = 0) and has not been hacked, their average concern level would be 1.65. This, however, is not an interesting outcome, and shows that this regression might not be useful under certain scenarios.   
+
+* Holding education, age and whether someone was hacked constant, individuals who followed privacy news "somewhat closely" and "very closely" are respectively 0.45 and 0.79 points more concerned than the group of individuals who do not follow news at all. The result for those who follow news "not too closely" has a p-value of 0.18, and is therefore not statistically significant.   
+
+* Holding following privacy news, education and hacking constant, individuals from the age groups of 30-49, 50-64 and 65+ are respectively 0.17, 0.18 and 0.15 points more concerned about data privacy then the age group 18-24.   
+
+* Holding following privacy news, age group and hacking constant, individuals who attended college but did not complete their degrees are 0.07 points more concerned than college graduates and above. The result for high school graduates or less has a p-value of 0.15, and is therefore not statistically significant.   
+
+* Holding following privacy news, age and educational attainment constant, individuals who were hacked in the past 12 months are 0.15 points more concerned about data privacy than those who have not been hacked.   
+
+It is interesting to compare the results from this regression to the results from the previous regression, focusing on comparing the outcomes for the `privacynews` variable. The values for each of the groups ("not too closely", "somewhat closely", "very closely") are very close, but not the same. Therefore, we can see that trying to address some confounders did change the results of our regression.
+
+`privacynews` group | Simple Regression Coefficient | Multivariate Regression Coefficient
+-------------------|-------------------------------|------------------------------------
+Not too closely | 0.11 (but not statistically significant) | 0.09 (but not statistically significant)
+Somewhat closely| 0.48| 0.45
+Very closely| 0.82| 0.79
 
 
-As we can see in the plot above, the mean privacy concern level of the treated group (that is, individuals who have suffered social media take overs without consent) is higher than that of the control group (those who have not suffered social media hacking). In order to better analyze this discrepancy, we can take a look at the average treatment effect (ATE) between these means - which is the positive value of 0.20. Although we cannot interpret this causally since many confounders have not been yet addressed, the ATE does confirm that the treated group of this study has higher data privacy and cybersecurity concerns than the control group.
 
 
 
 
 
 
+# Conclusion
 
 
+# References
 
+Roper iPoll by the Roper Center for Public Opinion Research. https://ropercenter.cornell.edu/ipoll/study/31116657/questions?text=college#c5b33662-fd89-426c-8923-ff1d530f920f. Acesso em 13 December 2023.
+
+Cover photo by Towfiqu Barbhuiya. <a href="https://unsplash.com/pt-br/@towfiqu999999?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Towfiqu barbhuiya</a> na <a href="https://unsplash.com/pt-br/fotografias/um-cadeado-dourado-sentado-em-cima-de-um-teclado-FnA5pAzqhMM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+
+“Population ageing and the digital divide, SUERF Policy Brief .:. SUERF - The European Money and Finance Forum”. SUERF.ORG, https://www.suerf.org/suerf-policy-brief/40251/population-ageing-and-the-digital-divide. 13 December de 2023.
+
+
+D. Christopher Brooks, ECAR Study of Undergraduate Students and Information Technology, EDUCAUSE (2016), p. 22
