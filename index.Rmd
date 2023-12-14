@@ -17,8 +17,9 @@ library(viridisLite)
 library(wesanderson)
 ```
 # Introduction
-**Does an individual's level of education and knowledge on how their data is being used and shared digitally influence their attitude towards data sharing?** 
-In this study, I intend on analyzing whether individuals who are more familiar with the framework of data privacy tend to be more or less granular in their relationship with data sharing, that is, whether they are more or less cautious when choosing to share their information with companies, the government, and other institutions. I expect that individuals who have more knowledge on issues of data privacy will be more protective of their data and more careful in how they engage with technology, while individuals with less familiarity with the notions of data privacy will tend to be less attentive and more permissive with their data-sharing choices. I believe this hypothesis might be true since individuals with more knowledge on data privacy will most likely be more aware of the potential dangers that surround sharing personal information with companies and services, therefore looking to prevent these dangers from happening to them. On the other hand, individuals who are not aware of the perils of data sharing might not be afraid of engaging with technology more freely, given that they might not fully comprehend the risks involved with sharing their data. 
+While technology brings more and more benefits to society every day, it also brings along a myriad of new problems - one of which is data privacy. As social media, online shopping, remote work, video streaming and other digital services become more widespread, data sharing becomes more central to our social and economic dynamics. Since issues of data breaches, hacking, cybercrime, unlawful information sharing and more are becoming progressively more common, it is important to understand how individuals from different places and groups relate to their data so that we can find the best ways to prevent these problems from happening while still reaping the benefits of the digital world. First, we need to know just how much individuals are aware of these issues, or just how much they truly care. In other words, **does an individual's knowledge data privacy issues influence their own level of concern about data privacy?** 
+
+In this study, I intend on analyzing whether individuals who are more familiar with the framework of data privacy tend to be more or less granular in their relationship with data sharing, that is, whether they are more or less cautious when choosing to share their information with companies, the government, and other institutions. My hypothesis is that individuals who have more knowledge on issues of data privacy will be more concerned about their data, potentially being more protective of their information and more careful in how they engage with technology, while individuals with less familiarity with the notions of data privacy will tend to be less attentive. I believe this hypothesis might be true since individuals with more knowledge on data privacy will most likely be more aware of the potential dangers that surround sharing personal information with companies and services, therefore looking to prevent these dangers from happening to them. On the other hand, individuals who are not aware of the perils of data sharing might not be afraid of engaging with technology more freely, given that they might not fully comprehend the risks involved with sharing their data. 
 
 # Data
 
@@ -152,7 +153,7 @@ p_concernxeducation <- dataprivacy_tidy |>
   filter(!education == "Don't know/Refused") |>
   mutate(education = case_when(education == "H.S. graduate or less" ~ "1. High school graduate or less",
                                education == "Some College" ~ "2. Partial college education",
-                               education == "College graduate+" ~ "3. Completed college degree and above")) |>
+                               education == "College graduate+" ~ "3. Completed college degree or above")) |>
   ggplot(mapping = aes(
     x = education,
     fill = concern_level)) + 
@@ -162,7 +163,7 @@ p_concernxeducation <- dataprivacy_tidy |>
        x = "Educational Attainment",
        y = "Number of Respondents",
        fill = "Level of Concern") +
-  theme(axis.text.x = element_text(size = 7))
+  theme(axis.text.x = element_text(size = 5))
 
 education_concern_prop <- dataprivacy_tidy |> 
   group_by(education) |> 
@@ -262,14 +263,9 @@ Somewhat closely| 0.48| 0.45
 Very closely| 0.82| 0.79
 
 
-
-
-
-
-
-
 # Conclusion
 
+This study relies on a very heavy assumption that we could, to a certain extent, quantify an individual's knowledge of data privacy issues based on how closely they follow news about the topic, but while there are definitely other means that can ensure someone stay up to date with technological developments and build their knowledge of issues of digital information and data sharing, the results of this study do somewhat support the original hypothesis that individuals who follow news about data privacy more closely do tend to be, on average, more concerned with their own privacy. These results were consistent throughout both regressions of the study - the simple regression with only how closely respondents followed data privacy news as a variable, and the multivariate regression which sought to address confounders. Speaking of confounders, the study definitely did not explore all confounders to this relationship comprehensively, therefore limiting our ability to claim that there is a causal relationship between one's level of concern and their data privacy knowledge. Still, it was interesting to observe, for instance, that educational attainment does not seem to have a strong positive influence on how people relate to data privacy, or that older generations seem to be more concerned with their privacy then individuals aged 18-24, or that victims of hacking demonstrated more concern. Should we have more time and money to conduct this study, it would be interesting to seek out more data on how knowledgeable individuals believe themselves to be on the topic of data privacy and how they acquired that - school classes, through the internet or personal research, at their jobs, etc. Essentially, I would try to assess what exactly goes into "knowledge of data privacy issues" besides how much an individual follows news on the matter. I would also try to survey individuals younger than 18 years old (which was the lower bound for this study), given that children and teenagers are also extremely engaged with the digital world and are not exempt from sharing their data online. The lack of this younger age demographic does lead the results of the study to be biased. Overall, nonetheless, this study is a good start to trying to understand how individuals relate to their data privacy based on how knowledgeable they are on the topic - and understanding this relationship is a key step to creating solutions to the problems that emerge as technology and the internet become more central to society.
 
 # References
 
